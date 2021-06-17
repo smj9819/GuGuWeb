@@ -10,7 +10,7 @@
  async function startProgram()
  {
  
-    await moveQuitly(0,15,50)
+    await moveQuietly(0,15,50)
  
     exitProgram();
     
@@ -18,7 +18,7 @@
  
  
  
- async function moveQuitly(angle, speed, distance) {
+ async function moveQuietly(angle, speed, distance) {
     playMatrixAnimation(0, true);//직진
     setHeading(angle);
     await delay(0.5);
