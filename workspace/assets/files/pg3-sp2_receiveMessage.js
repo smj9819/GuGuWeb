@@ -1,49 +1,39 @@
-/*   2021-05-27
- *   #3 비밀번호 보내기
+/* 
+ * [ SP2 ]
  *
- *   [ SP2 ]
  */
 
 var _messageChannels = [0,1,2,3,4,5,6,7];
 
-var password = [4,7,6,5];
-
+var password_cnt = 0;
 
 
 async function startProgram()
 {
-   sendMessage();
-   
+   recMessage();
 }
 
-async function sendMessage()
+async function recMessage()
 {
-   
-   playMatrixAnimation(2, true);//직진
-   await move(0,40,15)
-   
-   for(var i=0 ; i<4 ; i++)
+   listenForIRMessage(_messageChannels);
+}
+
+async function onIRMessage(channel)
+{
+   password[password_cnt] = channel;
+   password_cnt++;
+   if ( password_cnt >= 4 )
    {
-      sendIRMessage(password[i],64); //Send rsp data
-      await delay(3);
+      await scrollMatrixText(buildString(password[0], password[1], password[2], password[3]), { r: 255, g: 55, b: 40 }, 11, true);
+      exitProgram();
    }
-
-   exitProgram();
+   else
+   {
+      listenForIRMessage(_messageChannels);
+   }   
 }
-
-
-//registerEvent(EventType.onIRMessage, onIRMessage);
-
-async function move(angle, speed, distance) {
-   setHeading(angle);
-   await delay(0.5);
-   setSpeed(speed);
-   befor_distance = getDistance();
-   while (!(getDistance() >= befor_distance + distance))
-      await delay(0.025);
-   stopRoll();
-   await delay(1);
-}
+         
+registerEvent(EventType.onIRMessage, onIRMessage);
 
 registerMatrixAnimation({
    frames: 
@@ -97,7 +87,7 @@ registerMatrixAnimation({
    ],
    palette: 
    [
-      { r: 255, g: 255, b: 255 }, 
+      { r: 255, g: 255, b: 255 },
       { r: 0, g: 0, b: 0 }, 
       { r: 255, g: 0, b: 0 }, 
       { r: 255, g: 64, b: 0 }, 
@@ -123,9 +113,9 @@ registerMatrixAnimation({
       [
          [1, 1, 1, 0, 0, 1, 1, 1], 
          [1, 1, 0, 0, 0, 0, 1, 1], 
-         [1, 0, 0, 0, 0, 0, 0, 1],
+         [1, 0, 0, 0, 0, 0, 0, 1], 
          [1, 1, 1, 0, 0, 1, 1, 1], 
-         [1, 1, 1, 0, 0, 1, 1, 1], 
+         [1, 1, 1, 0, 0, 1, 1, 1],
          [1, 1, 1, 0, 0, 1, 1, 1], 
          [1, 1, 1, 0, 0, 1, 1, 1], 
          [1, 1, 1, 0, 0, 1, 1, 1]
@@ -143,7 +133,7 @@ registerMatrixAnimation({
       { r: 185, g: 246, b: 30 }, 
       { r: 0, g: 255, b: 0 }, 
       { r: 185, g: 255, b: 255 }, 
-      { r: 0, g: 255, b: 255 }, 
+      { r: 0, g: 255, b: 255 },
       { r: 0, g: 0, b: 255 }, 
       { r: 145, g: 0, b: 211 }, 
       { r: 157, g: 48, b: 118 }, 
